@@ -203,7 +203,7 @@
 			}, this))
 			.then($.proxy(function (treeData) {
 				// initialize data
-				return this._setInitialStates({ nodes: treeData }, 0);
+				return this._setInitialStates({ nodes: treeData }, 0, this._options);
 			}, this))
 			.then($.proxy(function () {
 				// render to DOM
@@ -364,13 +364,13 @@
 		For performance we also take this opportunity to
 		index nodes in a flattened ordered structure
 	*/
-	Tree.prototype._setInitialStates = function (node, level) {
+	Tree.prototype._setInitialStates = function (node, level, options) {
 		this._nodes = {};
 		return $.when.apply(this, this._setInitialState(node, level))
 			.done($.proxy(function () {
 				this._orderedNodes = this._sortNodes();
 				this._inheritCheckboxChanges();
-				this._triggerEvent('initialized', this._orderedNodes, _default.options);
+				this._triggerEvent('initialized', this._orderedNodes, options);
 				return;
 			}, this));
 	};
@@ -1349,7 +1349,7 @@
 		}, this));
 
 		// initialize new state and render changes
-		this._setInitialStates({nodes: this._tree}, 0)
+		this._setInitialStates({nodes: this._tree}, 0, options)
 			.done($.proxy(function () {
 				if (parentNode && !parentNode.state.expanded) {
 					this._setExpanded(parentNode, true, options);
@@ -1427,7 +1427,7 @@
 		}, this));
 
 		// initialize new state and render changes
-		this._setInitialStates({nodes: this._tree}, 0)
+		this._setInitialStates({nodes: this._tree}, 0, options)
 			.done(this._render.bind(this));
 	};
 
@@ -1458,7 +1458,7 @@
 		this._removeNodeEl(node);
 
 		// initialize new state and render changes
-		this._setInitialStates({nodes: this._tree}, 0)
+		this._setInitialStates({nodes: this._tree}, 0, options)
 			.done(this._render.bind(this));
 	};
 
